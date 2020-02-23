@@ -17,4 +17,9 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+    Add16(a=in, b=inc, out=added);
+    Not(in=reset, out=rout);
+    And16(a=in, b=rout,out=resetted);
+    Register(in=in, load=load, out=loaded);
+    
 }
