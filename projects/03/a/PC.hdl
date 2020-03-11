@@ -17,9 +17,10 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
-    Add16(a=in, b=inc, out=added);
-    Not(in=reset, out=rout);
-    And16(a=in, b=rout,out=resetted);
-    Register(in=in, load=load, out=loaded);
-    
+
+    Inc16(in=outloop, out=inced);
+    Mux16(a=outloop ,b=inced ,sel=inc ,out=added);
+    Mux16(a=added, b=in ,sel=load ,out=loaded);
+    Mux16(a=loaded, b=false ,sel= reset,out=resetted);
+    Register(in=resetted, load=true, out=out, out=outloop);
 }
