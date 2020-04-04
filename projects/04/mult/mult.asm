@@ -32,16 +32,17 @@
 // multiplication loop
   (MULT)
     @inc
-    D=M
+    D=M // grab increment value
     @R2
-    D=D+M
-    M=D
+    D=D+M // add increment value to R[2] and store in D Reg
+    M=D // set D reg value to R[2]
     
     @dec
-    D=M
-    D=D-1
-    M=D
-    @MULT
+    D=M 
+    D=D-1 // get RAM[dec] value, store in D Reg and decrease by 1
+    M=D // set RAM[dec] to D reg value
+
+    @MULT // loop again if value is greater than 0
     D;JGT 
 
   (END)
