@@ -12,12 +12,6 @@
     @inc
     M=D // set RAM[inc] to R[0]
 
-    @R1
-    D=M
-    @dec
-    M=D // set RAM[dec] to R[1]
-
-
 // reset R[2] to zero
     @0
     D=0
@@ -37,10 +31,10 @@
     D=D+M // add increment value to R[2] and store in D Reg
     M=D // set D reg value to R[2]
     
-    @dec
+    @R1
     D=M 
-    D=D-1 // get RAM[dec] value, store in D Reg and decrease by 1
-    M=D // set RAM[dec] to D reg value
+    D=D-1 // get RAM[1] value, store in D Reg and decrease by 1
+    M=D // set RAM[1] to D reg value
 
     @MULT // loop again if value is greater than 0
     D;JGT 
