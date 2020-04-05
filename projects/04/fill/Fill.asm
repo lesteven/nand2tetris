@@ -18,8 +18,8 @@
     @24576 // keyboard input
     D=M
 
-    @FILL
-    D;JEQ
+    @FILL // if no input, then skip to fill (color still 0)
+    D;JEQ // else color is -1
     @color
     M=-1
     
@@ -37,14 +37,14 @@
     D=D+M 
 
     @addr
-    M=D
+    M=D // store memory address in RAM[addr]
     
     @color
-    D=M
+    D=M // grab color from RAM[color]
     
     @addr
-    A=M
-    M=D // fill pointer w/ -1
+    A=M // make address be RAM[addr] value
+    M=D // fill pointer w/ color (0 or 1)
 
     @num  // decrement num
     M=M-1 
