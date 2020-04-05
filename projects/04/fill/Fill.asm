@@ -12,30 +12,41 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
-    //  @SCREEN
-    // M=1
   (LOOP)
-    @24576
+    @color    
+    M=0
+    @24576 // keyboard input
     D=M
 
-    @LOOP
+    @FILL
     D;JEQ
+    @color
+    M=-1
     
   (FILL)
-    @8191
+    @8192 // 8192 words to fill (includes 0)
     D=A
-    @stop
+    @num
     M=D
 
   (FILLLOOP)
     @SCREEN
     D=A
 
-    @stop
-    A=D+M
-    M=-1
+    @num // grab num and add to pointer
+    D=D+M 
 
-    @stop
+    @addr
+    M=D
+    
+    @color
+    D=M
+    
+    @addr
+    A=M
+    M=D // fill pointer w/ -1
+
+    @num  // decrement num
     M=M-1 
     D=M
 
