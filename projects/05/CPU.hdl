@@ -40,4 +40,52 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+
+    // A register
+    Mux16(a=instruction,b=aluout,sel=instruction[15],out=m1out); 
+    /* write to A reg if a instruction or d1 == 1 */
+    Not(in=instruction[15],out=abit);
+    Or(a=abit,b=instruction[5],out=awrite);
+    ARegister(in=m1out,load=awrite,out=aout,out[0..14]=addressM); 
+
+    /* if a-bit=0, then pick A, else pick M */
+    And(a=instruction[15], b=instruction[12], out=wmux);
+    Mux16(a=aout,b=inM,sel=wmux,out=amout); 
+
+    // D Register
+    And(a=instruction[15], b=instruction[4], out=writeD);
+    DRegister(in=aluout,load=writeD,out=dout); 
+
+    // ALU
+    And(a=instruction[15], b=instruction[11], out=wzx);
+    And(a=instruction[15], b=instruction[10], out=wnx);
+    And(a=instruction[15], b=instruction[9], out=wzy);
+    And(a=instruction[15], b=instruction[8], out=wny);
+    And(a=instruction[15], b=instruction[7], out=wf);
+    And(a=instruction[15], b=instruction[6], out=wno);
+    ALU(x=dout,y=amout,zx=wzx,nx=wnx,zy=wzy,ny=wny,f=wf,no=wno,out=aluout,out=outM,zr=zr,ng=ng); 
+
+
+    // PC
+    /* for GT */
+    Not(in=zr,out=nzr);
+    Not(in=ng,out=nng);
+    And(a=nzr, b=nng, out=grtcomp);
+
+    /* compare instruction w/ */
+    Xor(a=instruction[2], b=ng,out=j1);
+    Xor(a=instruction[1], b=zr, out=j2);
+    Xor(a=instruction[0], b=grtcomp,out=j3);
+
+    /* if all 0, then all are the same */
+    Or(a=j1,b=j2,out=jtemp);
+    Or(a=j3,b=jtemp,out=prejump);
+
+    /* not to write as 1 and only write if c-instruction */
+    Not(in=prejump, out=jump);
+    And(a=instruction[15], b=jump, out=wPC);
+    PC(in=aout,load=wPC,inc=true,reset=reset,out[0..14]=pc); 
+
+    // writeM
+    And(a=instruction[15],b=instruction[3],out=writeM);
 }
