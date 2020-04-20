@@ -1,0 +1,16 @@
+
+
+CHIP Or8 {
+    IN a,b,c,d,e,f,g,h;
+    OUT out;
+
+    PARTS:
+    Or(a=a,b=b,out=ab);
+    Or(a=c,b=d,out=cd);
+    Or(a=e,b=f,out=ef);
+    Or(a=g,b=h,out=gh);
+
+    Or(a=ab,b=cd,out=abcd);
+    Or(a=ef,b=gh,out=efgh);
+    Or(a=abcd,b=efgh,out=out);
+}

@@ -67,23 +67,35 @@ CHIP CPU {
 
 
     // PC
+    /* jmp instructions */
+    Not(in=instruction[2], out=nj1);
+    Not(in=instruction[1], out=nj2);
+    Not(in=instruction[0], out=nj3);
     /* for GT */
     Not(in=zr,out=nzr);
     Not(in=ng,out=nng);
-    And(a=nzr, b=nng, out=grtcomp);
 
-    /* compare instruction w/ */
-    Xor(a=instruction[2], b=ng,out=j1);
-    Xor(a=instruction[1], b=zr, out=j2);
-    Xor(a=instruction[0], b=grtcomp,out=j3);
+    /* JGT */
+    And5(a=nzr, b=nng, c=nj1, d=nj2, e=instruction[0],out=jgt);
+    /* JGE */
+    Or(a=zr, b=nng,out=prejge);
+    And5(a=prejge, b=true, c=nj1, d=instruction[1], e=instruction[0], out=jge);
+    /* JEQ -> zr */
+    And5(a=zr, b=true, c=nj1, d=instruction[1], e=nj3, out=jeq);
+    /* JLT  -> ng */
+    And5(a=ng, b=true, c=instruction[2], d=nj2, e=nj3, out=jlt);
+    /* JNE  -> nzr */
+    And5(a=nzr,b=true, c=instruction[2], d=nj2, e=instruction[0],out=jne);
+    /* JLE */
+    Or(a=zr,b=ng,out=prejle);
+    And5(a=prejle,b=true,c=instruction[2],d=instruction[1], e=nj3, out=jle);
+    /* JMP */
+    And3(a=instruction[2],b=instruction[1],c=instruction[0], out=jmp);
 
-    /* if all 0, then all are the same */
-    Or(a=j1,b=j2,out=jtemp);
-    Or(a=j3,b=jtemp,out=prejump);
+    Or8(a=jgt,b=jge,c=jeq,d=jlt,e=jne,f=jle,g=jmp,h=false,out=canjump);
 
     /* not to write as 1 and only write if c-instruction */
-    Not(in=prejump, out=jump);
-    And(a=instruction[15], b=jump, out=wPC);
+    And(a=instruction[15], b=canjump, out=wPC);
     PC(in=aout,load=wPC,inc=true,reset=reset,out[0..14]=pc); 
 
     // writeM
