@@ -1,7 +1,7 @@
 import sys
 import re
 from parser import parseLine
-from symbolTable import toBinary
+from binaryCode import toBinary
 
 
 
