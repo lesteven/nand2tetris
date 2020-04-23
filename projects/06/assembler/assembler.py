@@ -4,9 +4,13 @@ from parser import parseLine
 from binaryCode import toBinary
 
 
-def assembler(fileName):
+def extractName(fileName):
     m = re.search('[a-zA-Z]+\.asm', fileName)
     name = m.group(0).split('.')[0] + '.hack'
+    return name
+
+def assembler(fileName):
+    name = extractName(fileName)
     with open(name, 'w') as output:
         with open(fileName,"r") as f:
             num = 0
