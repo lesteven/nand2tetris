@@ -13,7 +13,7 @@ def extractName(fileName):
 def assembler(fileName):
     name = extractName(fileName)
     symbolTable = getSymbols(fileName)
-    print(symbolTable)
+    #print(symbolTable)
     symbolToAddress = symbolParser(symbolTable)
     with open(name, 'w') as output:
         with open(fileName,"r") as f:

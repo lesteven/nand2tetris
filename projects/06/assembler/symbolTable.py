@@ -64,7 +64,7 @@ def getSymbols(fileName):
         for line in f:
             strippedLine = stripLine(line)
             if len(strippedLine) > 0 and strippedLine[0] != "/":
-                print(str(num) + " " + strippedLine)
+                #print(str(num) + " " + strippedLine)
                 symbolsCopy = addToTableIfSymbol(strippedLine, symbolsCopy, num)
                 if strippedLine[0] != '(':
                     num += 1
@@ -85,14 +85,15 @@ def symbolParser(symbolTable):
             if re.match('[a-zA-Z]', splitA[1]) is None:
                 return toBinaryStr(int(splitA[1])) + '\n'
             # else remove '@' and return symbol
-            elif symbolTable[splitA[1]] != '':
+            elif splitA[1] in symbolTable:
+            #elif symbolTable[splitA[1]] != '':
                 #return symbolTable[splitA[1]] + " " + parsed['line'] + '\n'
-                return symbolTable[splitA[1]] + '\n'
+                return str(symbolTable[splitA[1]]) + '\n'
             else:
             # increment and return binary string of incremented address
             # for a-instructions
                 currNum = num
-                symbolTable[splitA[1]] = currNum
+                symbolTable[splitA[1]] = toBinaryStr(currNum)
                 num += 1
                 #return toBinaryStr(currNum) + " " + parsed['line'] + '\n'
                 return toBinaryStr(currNum) + '\n'
