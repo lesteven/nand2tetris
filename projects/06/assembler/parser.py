@@ -1,4 +1,4 @@
-
+# parse line of code and separate int comp, dest, jump
 def parseCode():
     num = 0
     def parseLine(line):

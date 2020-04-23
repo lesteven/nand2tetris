@@ -42,13 +42,6 @@ def stripLine(line):
 
 # if pseudo  command add to table
 def addToTableIfSymbol(line, symbolsCopy, num):
-    ''' 
-    if line[0] == '@':
-        splitA = line.split('@')[1]
-        # print(splitA)
-        if splitA not in symbolsCopy:
-            symbolsCopy[splitA] = ''
-    '''
     if line[0] == '(':
         removeParen = line.replace('(',"").replace(')',"")
         symbolsCopy[removeParen] = toBinaryStr(num)
@@ -81,21 +74,17 @@ def symbolParser(symbolTable):
         if parsed['instructionType'] == 'a-instruction':
             splitA = parsed['line'].split('@')
 
-            # if no letters, then not symbol, so convert to binary
+            # if no letters, then it's not a symbol, so convert to binary
             if re.match('[a-zA-Z]', splitA[1]) is None:
                 return toBinaryStr(int(splitA[1])) + '\n'
-            # else remove '@' and return symbol
+            # if in table, return value
             elif splitA[1] in symbolTable:
-            #elif symbolTable[splitA[1]] != '':
-                #return symbolTable[splitA[1]] + " " + parsed['line'] + '\n'
                 return str(symbolTable[splitA[1]]) + '\n'
             else:
-            # increment and return binary string of incremented address
-            # for a-instructions
+            # if symbol doesnt exist add to symbol table and return
                 currNum = num
                 symbolTable[splitA[1]] = toBinaryStr(currNum)
                 num += 1
-                #return toBinaryStr(currNum) + " " + parsed['line'] + '\n'
                 return toBinaryStr(currNum) + '\n'
         return ''
     return symbolToAddress

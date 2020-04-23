@@ -5,6 +5,7 @@ from binaryCode import toBinary
 from symbolTable import getSymbols,symbolParser
 
 
+# extract name from args
 def extractName(fileName):
     m = re.search('[a-zA-Z]+\.asm', fileName)
     name = m.group(0).split('.')[0] + '.hack'
