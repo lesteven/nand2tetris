@@ -2,6 +2,7 @@ import sys
 import re
 from parser import parseCode
 from binaryCode import toBinary
+from symbolTable import getSymbols,symbolToAddress
 
 
 def extractName(fileName):
@@ -11,6 +12,7 @@ def extractName(fileName):
 
 def assembler(fileName):
     name = extractName(fileName)
+    symbolTable = getSymbols(fileName)
     with open(name, 'w') as output:
         with open(fileName,"r") as f:
             parseLine = parseCode()
@@ -20,7 +22,12 @@ def assembler(fileName):
                     continue
                 #print(str(parsed) + " " + toBinary(parsed))
                 #writes to file
-                output.write(toBinary(parsed))
+                binaryLine = ''
+                if parsed['instructionType'] == 'a-instruction':
+                    binaryLine = symbolToAddress(parsed, symbolTable)
+                else:
+                    binaryLine = toBinary(parsed)
+                output.write(binaryLine)
 
 
 argArr = sys.argv
