@@ -1,6 +1,6 @@
 import sys
 import re
-from parser import parseLine
+from parser import parseCode
 from binaryCode import toBinary
 
 
@@ -13,15 +13,14 @@ def assembler(fileName):
     name = extractName(fileName)
     with open(name, 'w') as output:
         with open(fileName,"r") as f:
-            num = 0
+            parseLine = parseCode()
             for line in f:
-                parsed = parseLine(line, num)
+                parsed = parseLine(line)
                 if parsed == None:
                     continue
                 #print(str(parsed) + " " + toBinary(parsed))
-                # writes to file
+                #writes to file
                 output.write(toBinary(parsed))
-                num += 1
 
 
 argArr = sys.argv
