@@ -37,6 +37,7 @@ num = ['000','001','010','011','100','101','110','111']
 comp = {
     '0':'0' + num[5] + num[2],
     '1':'0' + num[7] + num[7],
+    '-1':'0' + num[7] + num[2],
     'D':'0' + num[1] + num[4],
     'A':'0' + num[6] + num[0],
     '!D':'0' + num[1] + num[5],
@@ -89,16 +90,18 @@ jump = {
 # to do
 # convert a-instruction to binary
 def toBinary(parsed):
-    print('parsed ' + str(parsed));
+    #print('parsed ' + str(parsed));
     if parsed['instructionType'] == 'a-instruction':
         splitA = parsed['line'].split('@')
+        if re.match('[a-zA-Z]', splitA[1]) is None:
+            return str("{0:016b}".format(int(splitA[1]))) + '\n'
         return splitA[1] + '\n'
     return '111' + comp[parsed['comp']] + dest[parsed['dest']] + jump[parsed['jump']] +'\n'
     
 
 
 def assembler(fileName):
-    m = re.search('[a-z]+\.asm', fileName)
+    m = re.search('[a-zA-Z]+\.asm', fileName)
     name = m.group(0).split('.')[0] + '.hack'
     with open(name, 'w') as output:
         with open(fileName,"r") as f:
@@ -107,7 +110,7 @@ def assembler(fileName):
                 parsed = parseLine(line, num)
                 if parsed == None:
                     continue
-                # print(str(parsed) + " " + toBinary(parsed))
+                #print(str(parsed) + " " + toBinary(parsed))
                 # writes to file
                 output.write(toBinary(parsed))
                 num += 1
