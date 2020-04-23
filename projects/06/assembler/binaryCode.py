@@ -58,6 +58,7 @@ jump = {
 # convert a-instruction to binary
 def toBinary(parsed):
     #print('parsed ' + str(parsed));
+    '''
     if parsed['instructionType'] == 'a-instruction':
         splitA = parsed['line'].split('@')
 
@@ -66,4 +67,5 @@ def toBinary(parsed):
             return str("{0:016b}".format(int(splitA[1]))) + '\n'
         # else remove '@' and return symbol
         return splitA[1] + '\n'
+    '''
     return '111' + comp[parsed['comp']] + dest[parsed['dest']] + jump[parsed['jump']] +'\n'

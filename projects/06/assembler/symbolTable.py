@@ -40,12 +40,18 @@ def stripLine(line):
     modLine = strippedLine.partition('//')[0].rstrip()
     return modLine
 
-def addToTableIfSymbol(line, symbolsCopy):
-    if len(line) > 1 and line[0] == '@':
+# if pseudo  command add to table
+def addToTableIfSymbol(line, symbolsCopy, num):
+    ''' 
+    if line[0] == '@':
         splitA = line.split('@')[1]
         # print(splitA)
         if splitA not in symbolsCopy:
             symbolsCopy[splitA] = ''
+    '''
+    if line[0] == '(':
+        removeParen = line.replace('(',"").replace(')',"")
+        symbolsCopy[removeParen] = toBinaryStr(num)
     return symbolsCopy
 
 
@@ -54,26 +60,41 @@ def addToTableIfSymbol(line, symbolsCopy):
 def getSymbols(fileName):
     symbolsCopy = copy.deepcopy(symbols)
     with open(fileName,"r") as f:
+        num = 0
         for line in f:
             strippedLine = stripLine(line)
-            symbolsCopy = addToTableIfSymbol(strippedLine, symbolsCopy)
+            if len(strippedLine) > 0 and strippedLine[0] != "/":
+                print(str(num) + " " + strippedLine)
+                symbolsCopy = addToTableIfSymbol(strippedLine, symbolsCopy, num)
+                if strippedLine[0] != '(':
+                    num += 1
     return symbolsCopy
 
 
     
 
 # run this during second iteration
-def symbolToAddress(parsed, symbolTable):
-    if parsed['instructionType'] == 'a-instruction':
-        splitA = parsed['line'].split('@')
+def symbolParser(symbolTable):
+    num = 16
+    def symbolToAddress(parsed, symbolTable):
+        nonlocal num
+        if parsed['instructionType'] == 'a-instruction':
+            splitA = parsed['line'].split('@')
 
-        # if no letters, then not symbol, so convert to binary
-        if re.match('[a-zA-Z]', splitA[1]) is None:
-            return toBinaryStr(int(splitA[1])) + '\n'
-        # else remove '@' and return symbol
-        if symbolTable[splitA[1]] != '':
-            return symbolTable[splitA[1]] + '\n'
-        else:
+            # if no letters, then not symbol, so convert to binary
+            if re.match('[a-zA-Z]', splitA[1]) is None:
+                return toBinaryStr(int(splitA[1])) + '\n'
+            # else remove '@' and return symbol
+            elif symbolTable[splitA[1]] != '':
+                #return symbolTable[splitA[1]] + " " + parsed['line'] + '\n'
+                return symbolTable[splitA[1]] + '\n'
+            else:
             # increment and return binary string of incremented address
-            return ''
-    return ''
+            # for a-instructions
+                currNum = num
+                symbolTable[splitA[1]] = currNum
+                num += 1
+                #return toBinaryStr(currNum) + " " + parsed['line'] + '\n'
+                return toBinaryStr(currNum) + '\n'
+        return ''
+    return symbolToAddress

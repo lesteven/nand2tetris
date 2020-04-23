@@ -2,7 +2,7 @@ import sys
 import re
 from parser import parseCode
 from binaryCode import toBinary
-from symbolTable import getSymbols,symbolToAddress
+from symbolTable import getSymbols,symbolParser
 
 
 def extractName(fileName):
@@ -13,6 +13,8 @@ def extractName(fileName):
 def assembler(fileName):
     name = extractName(fileName)
     symbolTable = getSymbols(fileName)
+    print(symbolTable)
+    symbolToAddress = symbolParser(symbolTable)
     with open(name, 'w') as output:
         with open(fileName,"r") as f:
             parseLine = parseCode()
